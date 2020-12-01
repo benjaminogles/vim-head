@@ -1,0 +1,313 @@
+*head.txt*  Plugin for managing tasks and notes in plain text
+
+Vim-Head
+
+=======================================================================
+CONTENTS                                                *head-contents*
+
+1. Editing outlines......................................|head-editing|
+  1.1 Syntax..............................................|head-syntax|
+  1.2 Mappings.....................................|head-edit-mappings|
+  1.3 Formatting......................................|head-formatting|
+2. Capturing tasks and notes.............................|head-capture|
+3. Creating reports......................................|head-reports|
+4. Finding a heading........................................|head-find|
+
+=======================================================================
+1. Editing outlines                                      *head-editing*
+
+Head documents have the `head` filetype which is recognized in
+files with the `.hd` extension.
+
+-----------------------------------------------------------------------
+1.1 Syntax                                                *head-syntax*
+
+A heading begins with a number of `*` characters which indicate
+its level in the outline. Next is an optional keyword. After that
+is an optional date surrounded by angled brackets. The date can
+also include a time, warning period and repeat modifier. Finally
+comes the title of the heading and a list of tags surrounded by
+colons. For example:
+
+>
+  * TODO <2020-01-01 08:00 -3d +1w> A first level heading :tag1:tag2:
+<
+
+The warning period in the date always comes before the repeat modifier.
+For both, the valid duration specifiers are `dwmhM` for day, week, month
+hour and minute.
+
+The keywords are configured by a global variable
+>
+  let g:head_keywords = ['TODO', '|', 'CANCELLED', 'DONE']
+<
+
+The `|` in the list separates keywords that label pending and finished
+tasks.
+
+-----------------------------------------------------------------------
+1.2 Mappings                                       *head-edit-mappings*
+
+There are a few default mappings in head documents to facilitate
+fast editing.
+
+`<m-cr>` Add a sibling heading at the same level below.
+`<c-a>`  Promote heading (delete a leading star).
+`<c-x>`  Demote heading (add a leading star).
+`<c-d>`  Change date of heading with prompt.
+
+These mappings work on the heading line as well as below it
+before the next heading. There are also two text objects that
+make working with headings easier.
+
+`at` A heading and all of its contents (children and notes).
+`it` A headings contents only.
+
+For example `yat` will yank a heading and its contents.
+
+-----------------------------------------------------------------------
+1.3 Formatting                                        *head-formatting*
+
+Head documents have their own `foldexpr`, `indentexpr` and `formatexpr`.
+To format a whole document for example, type `gggqG` in normal mode.
+This really just ensures that heading content is indented at the right
+level and that tags are right justified.
+
+=======================================================================
+2. Capturing tasks and notes                             *head-capture*
+
+To capture a quick task or note use the command
+>
+  HeadCapture
+<
+
+This will open up a menu where you can select a capture template.
+After selecting a template, a split window containing a head document
+will open where you can edit the task or note.
+
+To customize the templates use the global variable `g:head_capture_templates`.
+>
+  let g:head_capture_templates = {
+    \'Task': ['* TODO '],
+    \'Linked Task': ['* TODO ', '  :file: %f'],
+    \}
+<
+
+Each value in the dictionary should be a list of lines that will
+initially fill the capture window. You can define substitutions
+that give context to the capture. For example, the `Linked Task`
+template above includes a `%f` in its content. We can define the
+variable `g:head_capture_subs` to replace that with the file name
+that was open when we captured the task.
+
+>
+  let g:head_capture_subs = {'%f': {-> expand('%:p')}}
+<
+
+Each key in this dictionary defines the substring of text to
+match in templates and each value is a function that takes no
+parameters and returns the substitute.
+
+After closing the capture window, the task is appended to the
+file specified by `g:head_capture_file`.
+
+=======================================================================
+3. Creating reports                                      *head-reports*
+
+A report is built in a file with filetype `agenda`. Files with
+the extension `.agenda` are automatically recognized but you can
+use a vim modeline or any other method to set the filetype as well.
+The reports are easiest to understand by example.
+
+>
+  # TODO
+<
+
+All lines that control the report begin with a `#` character.
+This line is a filter. Because `TODO` is a keyword, this report
+will list all headings that have that keyword.
+Keyword filters are OR'd together.
+
+>
+  # TODO NEXT STARTED
+<
+
+So this report selects all headings that contain one of those keywords.
+You can also select by tag. Tags are AND'd together with each other and
+AND'd with the other applied filters.
+
+>
+  # TODO NEXT STARTED
+  # +goodtag -badtag
+<
+
+So this filter will take headings that have the tag `goodtag`, don't have
+the tag `badtag` and have one of the listed keywords.
+The next type of filter is a path filter. This filter has to appear on its
+own line and start with a `/` character. It is also AND'd with the other
+filters.
+
+>
+  # TODO NEXT STARTED
+  # +goodtag -badtag
+  # /Category/Project
+<
+
+So this report will be like the previous one but will only include headings
+that fall under the top level heading `Category` and next level heading `Project`.
+The last type of filter is the file filter which also has to appear on its
+own line and is AND'd with the other filters. It is a relative path to a head
+file to pull headings from. Use an absolute path if you want it to work from
+any working directory.
+
+>
+  # TODO NEXT STARTED
+  # +goodtag -badtag
+  # /Category/Project
+  # /path/to/file.hd
+<
+
+By default, headings are pulled from files listed in the variable `g:head_agenda_files`.
+
+>
+  let g:head_agenda_files = [expand('~/notes/tasks.hd')]
+<
+
+Multiple reports can live in the same file if they are separated by a blank line.
+
+>
+  # TODO NEXT STARTED
+
+  # DONE CANCELLED MISSED
+<
+
+So this creates two reports in the same file for pending and finished tasks.
+There are bound to be reports that you cannot create with these simple filters.
+So you can also use any script to create a report.
+Scripts must appear on their own line and begin with a `!` character.
+The input to scripts is given on stdin. Each heading is on a separate line
+and the fields of a heading are separated by a `|` character:
+
+>
+  filename|start_lnum|end_lnum|level|keyword|datetime|warning|repeat|title|tags
+<
+
+The title field is actually a full outline path for the heading.
+So this report counts the number of `TODO` tasks and `DONE` tasks.
+
+>
+  # !awk -F'|' '$5 == "TODO" {todo++} $5 == "DONE" {done++} END {print "TODO", todo, "DONE", done}'
+<
+
+Of course you don't have to use one liners.
+
+>
+  # !/path/to/complex_report.py --arg val
+<
+
+To list a heading in the report, the script should pass the input line for that
+heading as is to stdout. The plugin will reformat it.
+For example, here is another way to filter for `TODO` items.
+
+>
+  # !awk -F'|' '$5 == "TODO" {print $0}'
+<
+
+All other text on stdout that does not look like the fields of a heading will
+be appended to the report buffer without modification.
+A few characters are recognized for syntax highlighting.
+
+>
+  = New Section =
+  ------ Context Line ------
+  ! Warning Line !
+<
+
+You only need the beginning character to trigger the syntax highlighting.
+These reports will go stale as you edit the source documents.
+You can refresh the report by typing `r` in normal mode.
+Here is a full list of agenda mappings.
+
+`<tab>` Go to heading under cursor in vertical split.
+`<cr>`  Go to heading under cursor in current window and open first `:file:` listed if it exists.
+`<c-d>` Change date of heading under cursor.
+`q`     Close window.
+`r`     Refresh report.
+`s`     Save all open buffers.
+
+Changes made in the report window are reflected in the source file as well.
+The source files are saved and the report is refreshed on each change.
+Here is the complete list of commands you can use to change headings in an
+interactive way (they work in source files and report files).
+
+>
+  HeadPromote
+  HeadDemote
+  HeadChangeKeyword
+  HeadChangeDate
+  HeadRefile
+  HeadArchive
+<
+
+All of these commands should also work with a range.
+The keyword and date command take an optional argument to quickly use
+a predetermined value.
+
+>
+  HeadChangeKeyword DONE
+  HeadChangeDate tomorrow
+<
+
+The refile command brings up a menu of headings. The heading under
+the cursor will be moved under the selected heading (the two headings)
+have to be in different files originally. To configure which files are
+searched for target headings use the variable `g:head_refile_files`.
+
+>
+  let g:head_refile_files = copy(head#config#agenda_files())
+<
+
+In addition to maintaining reports in physical files you can configure
+reports to generate in temporary buffers with the variable `g:head_agenda_reports`.
+
+>
+  let g:head_agenda_reports = {
+    \'Agenda': ['!/path/to/agenda.py'],
+    \'Refile': ['/path/to/capture_file.hd']
+    \}
+<
+
+Each value in this dictionary is just the list of lines that will control
+the report without the leading `#` character.
+By default an agenda script that helps you keep track of deadlines and
+a report for your captured tasks are included.
+Launch the menu with the command
+
+>
+  HeadAgenda
+<
+
+There are also variants that launch the agenda window differently.
+
+>
+  HeadVsAgenda
+  HeadSpAgenda
+  HeadPrAgenda
+<
+
+=======================================================================
+4. Finding a heading                                        *head-find*
+
+Use the commands
+
+>
+  HeadHeading
+  HeadVsHeading
+  HeadSpHeading
+  HeadPrHeading
+<
+
+To open a heading in a given window configuration. By default you select
+a heading with vim's input mechanism. If you have the `fzf` plugin installed
+set the variable `g:head_use_fzf` to `1` and it will be used instead.
+

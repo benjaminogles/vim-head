@@ -1,0 +1,234 @@
+
+= Inserting Headings =
+
+Given head (the start of a note page):
+  The start of a note page.
+
+Do (insert new headings):
+  \<m-cr>A
+  \<m-cr>B
+  \<m-cr>C
+
+Expect:
+  The start of a note page.
+  * TODO A
+  * TODO B
+  * TODO C
+
+Do (insert new headings at different levels):
+  \<m-cr>A
+  \<m-cr>B
+  \<c-a>
+  \<m-cr>C
+  \<m-cr>D
+  \<c-x>
+  \<m-cr>E
+
+Expect:
+  The start of a note page.
+  * TODO A
+  ** TODO B
+  ** TODO C
+  * TODO D
+  * TODO E
+
+= Formatting =
+
+Given head (a note page with bad formatting):
+  The start of a note page.
+  * Heading :tag:
+  Wrong indent
+      Wrong indent
+
+  ** Heading :tag:
+  Wrong indent
+    Wrong indent
+
+      Wrong indent
+
+Do (re-indent):
+  gg=G
+
+Expect:
+  The start of a note page.
+  * Heading :tag:
+    Wrong indent
+    Wrong indent
+
+  ** Heading :tag:
+     Wrong indent
+     Wrong indent
+
+     Wrong indent
+
+Do (format):
+  gggqG
+
+Expect:
+  The start of a note page.
+  * Heading                                                                      :tag:
+    Wrong indent
+    Wrong indent
+
+  ** Heading                                                                     :tag:
+     Wrong indent
+     Wrong indent
+
+     Wrong indent
+
+= Visual Selections =
+
+Given head (a note page):
+  The start of a note page.
+  * Heading
+    Content 1
+  ** Heading
+     Content 2
+  * Heading
+    Content 3
+
+Do (delete content of first heading):
+  2Gdit
+
+Expect:
+  The start of a note page.
+  * Heading
+  * Heading
+    Content 3
+
+Do (delete first heading):
+  2Gdat
+
+Expect:
+  The start of a note page.
+  * Heading
+    Content 3
+
+Do (delete content of second heading from content position):
+  5Gdit
+
+Expect:
+  The start of a note page.
+  * Heading
+    Content 1
+  ** Heading
+  * Heading
+    Content 3
+
+Do (delete second heading from content position):
+  5Gdat
+
+Expect:
+  The start of a note page.
+  * Heading
+    Content 1
+  * Heading
+    Content 3
+
+Do (delete before first heading):
+  dat
+
+Expect:
+  The start of a note page.
+  * Heading
+    Content 1
+  ** Heading
+     Content 2
+  * Heading
+    Content 3
+
+Do (delete before first heading):
+  dit
+
+Expect:
+  The start of a note page.
+  * Heading
+    Content 1
+  ** Heading
+     Content 2
+  * Heading
+    Content 3
+
+= Setting Keywords =
+
+Given head (a heading with no keyword):
+  * Heading
+
+Execute (change keyword):
+  HeadChangeKeyword TODO
+
+Expect:
+  * TODO Heading
+
+Given head (a heading with keyword):
+  * TODO Heading
+
+Execute (change keyword):
+  HeadChangeKeyword DONE
+
+Expect:
+  * DONE Heading
+
+Given head (a heading with content):
+  * Heading
+    Content
+
+Execute (change keyword from content):
+  HeadChangeKeyword TODO
+
+Expect:
+  * TODO Heading
+    Content
+
+Given head (a heading with repeat):
+  * TODO <2020-01-01 +7d> Heading
+    Content
+
+Execute (change keyword from content):
+  HeadChangeKeyword DONE
+
+Expect:
+  * TODO <2020-01-08 +7d> Heading
+    Content
+  ** DONE <2020-01-01 +7d> Heading
+
+Given head (a heading with repeat time):
+  * TODO <2020-01-01 08:00 +7d> Heading
+    Content
+
+Execute (change keyword from content):
+  HeadChangeKeyword DONE
+
+Expect:
+  * TODO <2020-01-08 08:00 +7d> Heading
+    Content
+  ** DONE <2020-01-01 08:00 +7d> Heading
+
+= Setting Dates =
+
+Given head (a heading with no date):
+  * Heading
+
+Execute (change date):
+  HeadChangeDate 2020-01-01
+
+Expect:
+  * <2020-01-01> Heading
+
+Execute (change date and time):
+  HeadChangeDate 2020-01-01 14:00
+
+Expect:
+  * <2020-01-01 14:00> Heading
+
+Given head (a heading with date):
+  * <2020-01-01 14:00> Heading
+    Content
+
+Execute (change date from content):
+  HeadChangeDate 2020-01-01
+
+Expect:
+  * <2020-01-01> Heading
+    Content
+

@@ -1,0 +1,15 @@
+
+# examples/example.hd
+# TODO
+examples/example.hd|3|3|** TODO Create Github repository                                               :hobby:
+examples/example.hd|4|4|** TODO Add README                                                             :hobby:
+examples/example.hd|8|8|** TODO Fix issue #123
+examples/example.hd|9|9|** TODO <2020-04-12 07:00> Submit performance review
+examples/example.hd|10|10|** TODO <2020-04-13 08:00> Meeting with team
+examples/example.hd|11|$|** TODO <2020-04-14 12:00> Lunch with new hire
+
+# examples/example.hd
+# DONE
+examples/example.hd|5|5|** DONE Add more tests                                                         :hobby:
+examples/example.hd|7|7|** DONE Fix issue #122
+

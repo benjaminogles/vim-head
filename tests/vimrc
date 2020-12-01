@@ -1,0 +1,8 @@
+
+filetype off
+set rtp+=~/.config/nvim/plugged/vader.vim
+set rtp+=~/.config/nvim/plugged/vim-head
+filetype plugin indent on
+syntax enable
+set foldlevelstart=99
+let g:head_agenda_files = [expand('%:p:h') . '/tests/agenda_file.hd']

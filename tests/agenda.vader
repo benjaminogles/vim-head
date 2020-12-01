@@ -1,0 +1,45 @@
+
+Before:
+  function! TEST_REFRESH()
+    call head#agenda#refresh()
+    %s/.*\.hd|/filename|/
+    g/^\s*$/d
+  endfunction
+
+Given agenda (todo filter):
+  # TODO
+
+Execute:
+  call TEST_REFRESH()
+
+Expect:
+  # TODO
+  filename|2|2|* TODO Task 1
+  filename|6|6|** TODO Sub task 4
+  filename|7|7|** TODO Sub task 5
+  filename|8|$|* TODO Task 6
+
+Given agenda (done filter):
+  # DONE
+
+Execute:
+  call TEST_REFRESH()
+
+Expect:
+  # DONE
+  filename|3|3|* DONE Task 2
+
+Given agenda (no filter):
+  # comment
+
+Execute:
+  call TEST_REFRESH()
+
+Expect:
+  # comment
+  filename|2|2|* TODO Task 1
+  filename|6|6|** TODO Sub task 4
+  filename|7|7|** TODO Sub task 5
+  filename|8|$|* TODO Task 6
+  filename|4|7|* Heading 3
+  filename|3|3|* DONE Task 2

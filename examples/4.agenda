@@ -1,0 +1,5 @@
+
+# examples/example.hd
+# !awk -F'|' '$5 == "TODO" {n++} END {print n, "pending tasks"}'
+6 pending tasks
+

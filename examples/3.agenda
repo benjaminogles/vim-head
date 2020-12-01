@@ -1,0 +1,13 @@
+
+# examples/example.hd
+# !scripts/agenda.py
+
+! Overdue !
+examples/example.hd|9|9|** TODO <2020-04-12 07:00> Submit performance review
+
+= Today =
+examples/example.hd|10|10|** TODO <2020-04-13 08:00> Meeting with team
+
+= Tue 2020-04-14 =
+examples/example.hd|11|$|** TODO <2020-04-14 12:00> Lunch with new hire
+
