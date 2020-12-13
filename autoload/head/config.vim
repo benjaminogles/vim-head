@@ -35,7 +35,7 @@ endfunction
 
 function! head#config#capture_file()
   if !exists('g:head_capture_file')
-    let g:head_capture_file = expand('~/notes/refile.hd')
+    let g:head_capture_file = expand('~/Documents/notes/refile.hd')
   endif
   return g:head_capture_file
 endfunction
@@ -53,7 +53,7 @@ endfunction
 
 function! head#config#agenda_files()
   if !exists('g:head_agenda_files')
-    let g:head_agenda_files = [expand('~/notes/tasks.hd'), head#config#capture_file()]
+    let g:head_agenda_files = [expand('~/Documents/notes/tasks.hd'), head#config#capture_file()]
   endif
   return g:head_agenda_files
 endfunction
@@ -64,14 +64,14 @@ endfunction
 
 function! head#config#default_agenda_report()
   if !exists('g:head_default_agenda_report')
-    let g:head_default_agenda_report = s:project_root . '/scripts/agenda.py'
+    let g:head_default_agenda_report = s:project_root . '/scripts/agenda'
   endif
   return g:head_default_agenda_report
 endfunction
 
 function! head#config#default_list_report()
   if !exists('g:head_default_list_report')
-    let g:head_default_list_report = s:project_root . '/scripts/priority.py'
+    let g:head_default_list_report = s:project_root . '/scripts/priority'
   endif
   return g:head_default_list_report
 endfunction
@@ -105,7 +105,7 @@ endfunction
 
 function! head#config#archive_file()
   if !exists('g:head_archive_file')
-    let g:head_archive_file = expand('~/notes/archive.hd')
+    let g:head_archive_file = expand('~/Documents/notes/archive.hd')
   endif
   return g:head_archive_file
 endfunction
@@ -133,7 +133,7 @@ endfunction
 
 function! head#config#clock_file()
   if !exists('g:head_clock_file')
-    let g:head_clock_file = expand('~/notes/time.log')
+    let g:head_clock_file = expand('~/Documents/notes/time.log')
   endif
   return g:head_clock_file
 endfunction
