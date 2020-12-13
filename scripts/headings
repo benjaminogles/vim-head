@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+script_dir=$(dirname "$(realpath "$0")")
+
+filenames=""
+filters=""
+while [[ ! -z "$1" ]]
+do
+  if [[ -f "$1" ]]
+  then
+    filenames="$filenames $1"
+  else
+    filters="$filters $1"
+  fi
+  shift
+done
+
+"$script_dir"/headings.awk $filenames | "$script_dir"/filters.pl $filters
+
