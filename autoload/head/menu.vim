@@ -79,9 +79,8 @@ if head#config#use_fzf()
     let title_to_heading = head#menu#headings(a:files)
     function! s:refile_save_selection(selection) closure
       if has_key(title_to_heading, a:selection)
-        let selection = trim(a:selection, head#config#title_sep())
-        let g:head_prev_target = selection
-        call a:CB(title_to_heading[selection])
+        let g:head_prev_target = a:selection
+        call a:CB(title_to_heading[a:selection])
       endif
     endfunction
     call fzf#run({'source': keys(title_to_heading), 'sink': function('s:refile_save_selection'), 'options': ['-q', head#config#prev_target()]})

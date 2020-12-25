@@ -140,7 +140,7 @@ function! head#config#clock_file()
 endfunction
 
 function! head#config#use_fzf()
-  return exists('g:head_use_fzf')
+  return !exists('g:head_no_fzf')
 endfunction
 
 function! head#config#field_sep()
