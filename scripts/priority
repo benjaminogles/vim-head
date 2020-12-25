@@ -15,4 +15,4 @@ awk -F'|' -v OFS='|' '
   else
     print 6, $0
 }
-' | sort | sed 's/[0-9]\+|//'
+' | sort -k1,1 -t'|' -sn | sed 's/[0-9]\+|//'
