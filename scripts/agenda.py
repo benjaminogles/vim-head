@@ -4,22 +4,19 @@ import datetime
 import itertools
 import sys
 
+from heading import *
+
 days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-def keyword_weights():
-    weights = {}
-    if KEYWORDS:
-        sep = KEYWORDS.index('|')
-        for keyword in KEYWORDS[sep+1:]:
-            weights[keyword] = len(KEYWORDS)
-        idx = 1
-        while idx <= sep:
-            weights[KEYWORDS[sep - idx]] = idx
-            idx += 1
-    return weights
-
 def priority_key():
-    weights = keyword_weights(KEYWORDS)
+    weights = {}
+    sep = KEYWORDS.index('|')
+    for keyword in KEYWORDS[sep+1:]:
+        weights[keyword] = len(KEYWORDS)
+    idx = 1
+    while idx <= sep:
+        weights[KEYWORDS[sep - idx]] = idx
+        idx += 1
     return lambda heading: weights[heading.keyword] if heading.keyword in weights else len(weights.keys()) - 1
 
 def date_key(heading):
