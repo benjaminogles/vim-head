@@ -2,7 +2,7 @@
 # Vim-Head
 
 Vim-Head is a Vim plugin for managing tasks and notes in plaintext.
-It is inspired by Emacs Org Mode but its goals are actually very different in scope.
+It is inspired by Emacs Org Mode.
 
 ## Motivation
 
@@ -52,19 +52,10 @@ The input to scripts is easy to work with so even one-liners aren't too difficul
 
 ## Dependencies
 
-- GNU coreutils `date` command for adjusting dates.
-- Python 3 for building reports (if you hate this, you could easily port `scripts/headings.py` to the language of your choice).
+- Neovim (some of the vimscript features might be available in later versions of Vim)
+- `date` command for adjusting dates.
+- `sed`, `awk`, `sort` and `python3` for default reports.
 - (optional) `FZF` for better menus.
 
 This is the first Vim plugin I have created so I may have unknowingly relied on some other feature specific to my setup.
-Feel free to report any issues you encounter.
-
-## Contributing
-
-I have used this plugin as is for a while without wanting to make any changes.
-So I figured it was time to open source it in case there are others who have ideas.
-Any ideas are welcome but keep in mind that I want to keep the scope of the project relatively narrow compared to other similar plugins.
-
-Ideally, the core feature set provided by the Vimscript portion of the codebase will stay constant other than bug fixes and minor enhancements that drive flexibility.
-Cool contributions might be example scripts that enable specific workflows or integration with other tools.
 

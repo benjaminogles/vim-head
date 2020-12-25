@@ -189,10 +189,9 @@ The input to scripts is given on stdin. Each heading is on a separate line
 and the fields of a heading are separated by a `|` character:
 
 >
-  filename|start_lnum|end_lnum|level|keyword|datetime|warning|repeat|title|tags
+  filename|start_lnum|end_lnum|level|keyword|datetime|warning|repeat|path|title|tags
 <
 
-The title field is actually a full outline path for the heading.
 So this report counts the number of `TODO` tasks and `DONE` tasks.
 
 >
