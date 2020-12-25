@@ -4,7 +4,7 @@ if exists("g:autoloaded_head_agenda")
 endif
 let g:autoloaded_head_agenda = 1
 
-let s:fields_pat = '.*' . join(repeat([head#config#field_sep()], 9), '.*') . '.*' 
+let s:fields_pat = '.*' . join(repeat([head#config#field_sep()], 10), '.*') . '.*' 
 function! s:format_script_output(idx, content)
   if a:content =~ s:fields_pat
     return head#heading#from_fields(a:content).agenda_text()
@@ -37,7 +37,7 @@ function! s:next_config(lines, start, filenames, scripts, filters, contents)
         elseif line =~ '^#\s*!.*'
           call add(a:scripts, trim(line[stridx(line, '!')+1:]))
         elseif line !~ 'vim:' && line =~ '^#\s*\S'
-          call add(a:filters, line)
+          call add(a:filters, trim(line[1:]))
         endif
       endif
     elseif len(a:contents)

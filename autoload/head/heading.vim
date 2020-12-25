@@ -6,7 +6,7 @@ let g:autoloaded_head_heading = 1
 
 " helpers
 
-let s:script_name = head#config#script_dir() . '/headings.py'
+let s:script_name = head#config#script_dir() . '/headings'
 
 function! s:heading(parts)
   let heading = {}
@@ -352,15 +352,11 @@ function! head#heading#from_range(filename, startline, endline)
 endfunction
 
 function! head#heading#script(files, filters, pipe)
-  let cmd = join([s:script_name] + a:files)
+  let cmd = join([s:script_name] + a:files + a:filters)
   if len(a:pipe)
     let cmd .= join(['|', a:pipe])
   endif
-  if len(a:filters)
-    return systemlist(cmd, a:filters)
-  else
-    return systemlist(cmd)
-  endif
+  return systemlist(cmd)
 endfunction
 
 function! head#heading#from_source()
@@ -384,13 +380,9 @@ endfunction
 
 function! head#heading#from_fields(content)
   let parts = split(a:content, head#config#field_sep(), 1)
-  let path_and_title = split(parts[8], head#config#title_sep())
-  let path = join(path_and_title[0:-2], head#config#title_sep())
-  let title = len(path_and_title) ? path_and_title[-1] : ''
-  let parts[8] = title
-  let heading = s:heading(parts[0:1] + parts[3:9])
+  let heading = s:heading(parts[0:1] + parts[3:7] + parts[9:])
   let heading.bottom = parts[2] == '$' ? '$' : str2nr(parts[2])
-  let heading.path = path
+  let heading.path = parts[8]
   return heading
 endfunction
 

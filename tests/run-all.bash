@@ -10,7 +10,8 @@ run_test() {
   then
     echo Success
   else
-    echo Failure \(check /tmp/vader.out\)
+    echo Failure
+    less $VADER_OUTPUT_FILE
     exit
   fi
 }

@@ -15,5 +15,14 @@ do
   shift
 done
 
-"$script_dir"/headings.awk $filenames | "$script_dir"/filters.pl $filters
+if [[ -z "$filenames" ]]
+then
+  echo No input files given
+  exit 1
+fi
+
+grep -Hn '^\(\*\|\s*:.*:\)' $filenames | \
+  "$script_dir"/fields.sed | \
+  "$script_dir"/outline.awk | \
+  "$script_dir"/filters.py "$filters"
 

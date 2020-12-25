@@ -1,6 +1,7 @@
 
 Before:
-  function! TEST_REFRESH()
+  function! TEST_REFRESH(agenda_file)
+    let g:head_agenda_files = [g:vim_head_tests_dir . '/' . a:agenda_file]
     call head#agenda#refresh()
     %s/.*\.hd|/filename|/
     g/^\s*$/d
@@ -10,7 +11,7 @@ Given agenda (todo filter):
   # TODO
 
 Execute:
-  call TEST_REFRESH()
+  call TEST_REFRESH('1.hd')
 
 Expect:
   # TODO
@@ -23,7 +24,7 @@ Given agenda (done filter):
   # DONE
 
 Execute:
-  call TEST_REFRESH()
+  call TEST_REFRESH('1.hd')
 
 Expect:
   # DONE
@@ -33,7 +34,7 @@ Given agenda (no filter):
   # comment
 
 Execute:
-  call TEST_REFRESH()
+  call TEST_REFRESH('1.hd')
 
 Expect:
   # comment
@@ -41,5 +42,5 @@ Expect:
   filename|6|6|** TODO Sub task 4
   filename|7|7|** TODO Sub task 5
   filename|8|$|* TODO Task 6
-  filename|4|7|* Heading 3
   filename|3|3|* DONE Task 2
+  filename|4|7|* Heading 3

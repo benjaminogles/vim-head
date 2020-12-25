@@ -2,17 +2,17 @@
 
 awk -F'|' -v OFS='|' '
 {
-  if ($0 ~ /NEXT/)
+  if ($5 == "NEXT")
     print 1, $0
-  else if ($0 ~ /STARTED/)
+  else if ($5 == "STARTED")
     print 2, $0
-  else if ($0 ~ /TODO/)
+  else if ($5 == "TODO")
     print 3, $0
-  else if ($0 ~ /WAITING/)
+  else if ($5 == "WAITING")
     print 4, $0
-  else if ($0 ~ /DONE/)
+  else if ($5 == "DONE")
     print 5, $0
   else
     print 6, $0
 }
-' | sort -s | sed 's/[0-9]\+|//'
+' | sort | sed 's/[0-9]\+|//'

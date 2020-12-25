@@ -26,6 +26,7 @@ function! head#config#capture_templates()
     let g:head_capture_templates = {
           \'Task': ['* TODO '],
           \'Linked Task': ['* TODO ', '  :file: %f'],
+          \'Idea': ['* WAITING '],
           \'Journal': ['* %d '],
           \'Meeting': ['* %t MEETING ']
           \}
@@ -64,7 +65,7 @@ endfunction
 
 function! head#config#default_agenda_report()
   if !exists('g:head_default_agenda_report')
-    let g:head_default_agenda_report = s:project_root . '/scripts/agenda'
+    let g:head_default_agenda_report = s:project_root . '/scripts/agenda.py'
   endif
   return g:head_default_agenda_report
 endfunction
