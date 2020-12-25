@@ -14,8 +14,11 @@ endfunction
 
 function! head#agenda#report(cmd, report)
   let file = head#config#agenda_tmp()
-  let script = map(a:report, {_, val -> '# ' . val})
-  if len(head#utils#overwrite_nofile(file, a:cmd, script))
+  let lines = map(a:report, {_, val -> '# ' . val})
+  for idx in range(len(lines) - 1)
+    call insert(lines, '', idx + 1)
+  endfor
+  if len(head#utils#overwrite_nofile(file, a:cmd, lines))
     return head#agenda#refresh()
   endif
   return v:false

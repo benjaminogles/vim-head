@@ -54,7 +54,7 @@ endfunction
 
 function! head#config#agenda_files()
   if !exists('g:head_agenda_files')
-    let g:head_agenda_files = [expand('~/Documents/notes/tasks.hd'), head#config#capture_file()]
+    let g:head_agenda_files = [expand('~/Documents/notes/tasks.hd')]
   endif
   return g:head_agenda_files
 endfunction
@@ -81,7 +81,8 @@ function! head#config#agenda_reports()
   if !exists('g:head_agenda_reports')
     let agenda = '!'.head#config#default_agenda_report()
     let refile = head#config#capture_file()
-    let g:head_agenda_reports = {'Agenda': [agenda], 'Refile': [refile]}
+    let tasks = 'TODO'
+    let g:head_agenda_reports = {'Agenda': [agenda, refile], 'Tasks': ['NEXT TODO', refile]}
   endif
   return g:head_agenda_reports
 endfunction
