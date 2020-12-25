@@ -13,6 +13,19 @@ function path(to, j, p) {
   return p ? p : "/"
 }
 
+function tags(to, j, t) {
+  j = 0
+  t = ""
+  while (++j <= to)
+  {
+    if (t && data[j, 9])
+      t = t ":" data[j, 9]
+    else if (data[j, 9])
+      t = data[j, 9]
+  }
+  return t
+}
+
 function print_lines(to, lnum, old, j, k) {
   old = idx
   for (j = 1; j <= old; j++)
@@ -21,7 +34,7 @@ function print_lines(to, lnum, old, j, k) {
       continue
     idx--
 
-    print data[j, 1], data[j, 2], lnum, length(data[j, 3]), data[j, 4], data[j, 5], data[j, 6], data[j, 7], path(j), data[j, 8], data[j, 9]
+    print data[j, 1], data[j, 2], lnum, length(data[j, 3]), data[j, 4], data[j, 5], data[j, 6], data[j, 7], path(j), data[j, 8], tags(j)
 
     for (k = 1; k <= metalen[j]; k++)
       print meta[j, k]
