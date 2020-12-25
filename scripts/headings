@@ -24,5 +24,6 @@ fi
 grep -Hn '^\(\*\|\s*:.*:\)' $filenames | \
   "$script_dir"/fields.sed | \
   "$script_dir"/outline.awk | \
+  sort -k1,1 -k2n,2 -t'|' | \
   "$script_dir"/filters.py "$filters"
 
