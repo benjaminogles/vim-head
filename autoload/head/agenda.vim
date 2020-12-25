@@ -14,7 +14,7 @@ endfunction
 
 function! head#agenda#report(cmd, report)
   let file = head#config#agenda_tmp()
-  let lines = map(a:report, {_, val -> '# ' . val})
+  let lines = map(copy(a:report), {_, val -> '# ' . val})
   for idx in range(len(lines) - 1)
     call insert(lines, '', idx + 1)
   endfor
