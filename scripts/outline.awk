@@ -13,15 +13,18 @@ function path(to, j, p) {
   return p ? p : "/"
 }
 
-function tags(to, j, t) {
+function tags(to, j, t, tag) {
   j = 0
   t = ""
   while (++j <= to)
   {
-    if (t && data[j, 9])
-      t = t ":" data[j, 9]
-    else if (data[j, 9])
-      t = data[j, 9]
+    tag = data[j, 9]
+    gsub(/^ *: */, "", tag)
+    gsub(/ *: *$/, "", tag)
+    if (t && tag)
+      t = t ":" tag
+    else if (tag)
+      t = tag
   }
   return t
 }
