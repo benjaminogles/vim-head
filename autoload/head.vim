@@ -40,7 +40,7 @@ function! head#valid_headings(startline, endline)
   elseif s:in_head()
     call extend(headings, head#heading#from_range(expand('%:p'), a:startline, a:endline))
   endif
-  return sort(filter(headings, {idx, val -> val.valid()}), function('s:sort_lnum_desc'))
+  return sort(filter(headings, {_, val -> val.valid()}), function('s:sort_lnum_desc'))
 endfunction
 
 function! head#valid_unnested_headings(startline, endline)

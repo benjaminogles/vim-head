@@ -90,6 +90,10 @@ function! s:heading_methods.same(other) dict
 endfunction
 
 function! s:heading_methods.valid() dict
+  return len(self.filename) && self.lnum > 0
+endfunction
+
+function! s:heading_methods.check() dict
   if empty(self.filename)
     return v:false
   endif
@@ -104,7 +108,10 @@ function! s:heading_methods.valid() dict
   endif
   let content = getbufline(self.bufload(), self.lnum)[0]
   let heading = s:parse(self.filename, self.lnum, content)
-  return self.same(heading)
+  if self.same(heading)
+    return heading
+  endif
+  return s:heading([])
 endfunction
 
 function! s:heading_methods.focused() dict
@@ -374,7 +381,7 @@ function! head#heading#from_agenda()
   if len(parts) == 4
     let heading = s:parse(parts[0], parts[1], parts[3])
     let heading.bottom = parts[2] == '$' ? '$' : str2nr(parts[2])
-    return heading
+    return heading.check()
   endif
   return s:heading([])
 endfunction
