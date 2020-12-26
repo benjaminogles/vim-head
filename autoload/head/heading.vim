@@ -33,7 +33,7 @@ function! s:parse(filename, lnum, content)
   if !len(matches)
     return s:heading(parts)
   endif
-  call extend(parts, [len(matches[1]), matches[2], matches[4] . matches[5]] + matches[6:9])
+  call extend(parts, [len(matches[1]), matches[2], matches[4] . matches[5]] + matches[6:])
   return s:heading(parts)
 endfunction
 
@@ -115,7 +115,7 @@ endfunction
 
 function! s:heading_methods.load_lines(with_path) dict
   let self.lines = getbufline(self.bufload(), self.lnum, self.bottom)
-  let self.lines[0] = self.source_text({a:with_path})
+  let self.lines[0] = self.source_text(a:with_path)
   return self
 endfunction
 
