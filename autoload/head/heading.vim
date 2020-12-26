@@ -98,13 +98,13 @@ endfunction
 
 function! s:heading_methods.load_lines(with_path) dict
   let self.lines = getbufline(self.bufload(), self.lnum, self.bottom)
-  let self.lines[0] = self.source_text({'path': a:with_path})
+  let self.lines[0] = self.source_text({a:with_path})
   return self
 endfunction
 
 function! s:heading_methods.load_line(with_path) dict
   let self.lines = getbufline(self.bufload(), self.lnum)
-  let self.lines[0] = self.source_text({'path': a:with_path})
+  let self.lines[0] = self.source_text(a:with_path)
   return self
 endfunction
 
@@ -187,7 +187,7 @@ function! s:heading_methods.store_line(with_path)
   if !has_key(self, 'lines') || !len(self.lines)
     let self.lines = ['']
   endif
-  let self.lines[0] = self.source_text(a:with_path ? {'path': 1} : {})
+  let self.lines[0] = self.source_text(a:with_path)
   return self
 endfunction
 
@@ -306,14 +306,14 @@ endfunction
 " printing
 
 function! s:heading_methods.source_text(...) dict
-  let opts = a:0 ? a:1 : {}
+  let with_path = a:0 ? a:1 : v:false
   let str = repeat('*', self.level)
   let str .= len(self.keyword) ? ' ' . self.keyword : ''
   let str .= len(self.date) ? ' <' . self.date : ''
   let str .= len(self.date) && len(self.warning) ? ' ' . self.warning : ''
   let str .= len(self.date) && len(self.repeat) ? ' ' . self.repeat : ''
   let str .= len(self.date) ? '>' : ''
-  let str .= ' ' . (has_key(opts, 'path') && opts.path && len(self.path) ? self.path . head#config#title_sep() : '') . self.title
+  let str .= ' ' . (with_path && len(self.path) ? self.path . head#config#title_sep() : '') . self.title
   let tagstr = join(self.tags, head#config#tag_sep())
   let str .= len(tagstr) && len(str) < 79 ? repeat(' ', 79 - len(str)) : len(tagstr) ? ' ' : ''
   let str .= len(tagstr) ? head#config#tag_sep() . tagstr . head#config#tag_sep() : ''
