@@ -381,7 +381,7 @@ function! head#heading#from_agenda()
   if len(parts) == 4
     let heading = s:parse(parts[0], parts[1], parts[3])
     let heading.bottom = parts[2] == '$' ? '$' : str2nr(parts[2])
-    return heading.check()
+    return heading
   endif
   return s:heading([])
 endfunction

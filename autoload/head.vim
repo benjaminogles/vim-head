@@ -34,7 +34,7 @@ endfunction
 function! head#valid_headings(startline, endline)
   let headings = []
   if s:in_agenda()
-    exe a:startline.','.a:endline.'call add(headings, head#heading#from_agenda())'
+    exe a:startline.','.a:endline.'call add(headings, head#heading#from_agenda().check())'
   elseif s:in_head() && a:startline == a:endline
     call add(headings, head#heading#from_content())
   elseif s:in_head()
