@@ -160,8 +160,8 @@ function! s:heading_methods.load_bottom(...)
   return self
 endfunction
 
-function! s:heading_methods.get_children() dict
-  return head#heading#from_range(self.filename, self.lnum + 1, self.bottom)
+function! s:heading_methods.get_children(...) dict
+  return head#heading#from_range(self.filename, self.lnum + 1, self.bottom, a:0 ? a:1 : v:false)
 endfunction
 
 " in memory actions
@@ -338,7 +338,8 @@ endfunction
 
 " public
 
-function! head#heading#from_range(filename, startline, endline)
+function! head#heading#from_range(filename, startline, endline, ...)
+  let inherit_tags = a:0 ? a:1 : v:true
   let headings = []
   let lines = getbufline(head#utils#bufload(a:filename), a:startline, a:endline)
   let stack = []
@@ -349,7 +350,9 @@ function! head#heading#from_range(filename, startline, endline)
     let heading = s:parse(a:filename, a:startline + idx, lines[idx])
     call s:update_stack(stack, heading)
     let heading.path = s:stack_path(stack)
-    call extend(heading.tags, s:stack_tags(stack))
+    if inherit_tags
+      call extend(heading.tags, s:stack_tags(stack))
+    endif
     call add(stack, heading)
     call add(headings, heading)
   endfor
