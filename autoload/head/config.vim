@@ -24,11 +24,10 @@ endfunction
 function! head#config#capture_templates()
   if !exists('g:head_capture_templates')
     let g:head_capture_templates = {
-          \'Task': ['* TODO '],
-          \'Linked Task': ['* TODO ', '  :file: %f'],
-          \'Idea': ['* WAITING '],
-          \'Journal': ['* %d '],
-          \'Meeting': ['* %t MEETING ']
+          \'Task': ['* TODO %s'],
+          \'Linked Task': ['* TODO %s :file=%f:'],
+          \'Journal': ['* %d %s'],
+          \'Meeting': ['* %t MEETING %s']
           \}
   endif
   return g:head_capture_templates

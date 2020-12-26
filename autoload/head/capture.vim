@@ -19,7 +19,12 @@ function! head#capture#edit(cmd, content)
     endfor
     if len(head#utils#overwrite_nofile(head#config#capture_tmp(), a:cmd, content))
       setf head
-      startinsert!
+      if search('%s')
+        normal! d2l
+        startinsert
+      else
+        startinsert!
+      endif
     endif
   endif
 endfunction

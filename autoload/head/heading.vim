@@ -62,6 +62,24 @@ endfunction
 
 let s:heading_methods = {}
 
+function! s:heading_methods.matching_tags(tag) dict
+  return filter(copy(self.tags), {_, val -> val[0:len(a:tag)-1] == a:tag})
+endfunction
+
+function! s:heading_methods.has_tag(tag) dict
+  return len(self.matching_tags(a:tag))
+endfunction
+
+function! s:heading_methods.tag_value(tag)
+  for word in self.matching_tags(a:tag)
+    let parts = split(word, '=')
+    if len(parts) > 1
+      return trim(parts[1])
+    endif
+  endfor
+  return ''
+endfunction
+
 " load file and check state
 
 function! s:heading_methods.bufload() dict
@@ -133,22 +151,6 @@ function! s:heading_methods.load_bottom(...)
     let pat_lnum = search(bot_pat, 'Wn')
     let self.bottom = pat_lnum ? pat_lnum - 1 : line('$')
   endif
-  return self
-endfunction
-
-function! s:heading_methods.load_meta()
-  let self.meta = {}
-  let lines = getbufline(self.bufload(), self.lnum + 1, self.bottom)
-  for line in lines
-    let matches = matchlist(line, '^\s*:\(\S\+\):\s*\(.*\)$')
-    if len(matches)
-      let [key, val] = matches[1:2]
-      if !has_key(self.meta, key)
-        let self.meta[key] = []
-      endif
-      call add(self.meta[key], val)
-    endif
-  endfor
   return self
 endfunction
 
@@ -406,9 +408,18 @@ function! head#heading#insert_child(keyword, title)
 endfunction
 
 function! head#heading#goto_first_link(heading)
-  call a:heading.load_meta()
-  if has_key(a:heading.meta, 'file')
-    exe 'vs' a:heading.meta['file'][0]
+  let dir_tag = a:heading.tag_value('dir')
+  let file_tag = a:heading.tag_value('file')
+  if len(dir_tag)
+    if getcwd()[-len(dir_tag):] != dir_tag
+      exe 'cd' dir_tag
+    endif
+    if !len(file_tag)
+      let file_tag = '.'
+    endif
+  endif
+  if len(file_tag)
+    exe 'vs' file_tag
   endif
 endfunction
 
