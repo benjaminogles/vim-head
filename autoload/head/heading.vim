@@ -386,15 +386,23 @@ function! head#heading#from_fields(content)
   return heading
 endfunction
 
-function! head#heading#insert_sibling(keyword, title)
-  let heading = head#heading#from_content().load_bottom()
-  let level = heading.level > 0 ? heading.level : 1
-  let lnum = heading.bottom == '$' ? heading.bottom : heading.bottom + 1
-  let sibling = s:heading([heading.filename, lnum, level, a:keyword, '', '', '', a:title, ''])
-  if sibling.store_line(v:false).write(v:true)
-    let lnum = sibling.lnum
+function! head#heading#insert_below(keyword, title, adjust)
+  let current = head#heading#from_content().load_bottom()
+  let level = current.level > 0 ? current.level + a:adjust : 1
+  let lnum = current.bottom == '$' ? current.bottom : current.bottom + 1
+  let heading = s:heading([current.filename, lnum, level, a:keyword, '', '', '', a:title, ''])
+  if heading.store_line(v:false).write(v:true)
+    let lnum = heading.lnum
     exe lnum
   endif
+endfunction
+
+function! head#heading#insert_sibling(keyword, title)
+  call head#heading#insert_below(a:keyword, a:title, 0)
+endfunction
+
+function! head#heading#insert_child(keyword, title)
+  call head#heading#insert_below(a:keyword, a:title, 1)
 endfunction
 
 function! head#heading#goto_first_link(heading)
