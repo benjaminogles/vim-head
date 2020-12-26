@@ -33,8 +33,7 @@ function! s:parse(filename, lnum, content)
   if !len(matches)
     return s:heading(parts)
   endif
-  call extend(parts, [len(matches[1]), matches[2], matches[4] . matches[5]] + matches[6:8])
-  call add(parts, trim(matches[9], head#config#tag_sep()))
+  call extend(parts, [len(matches[1]), matches[2], matches[4] . matches[5]] + matches[6:9])
   return s:heading(parts)
 endfunction
 
