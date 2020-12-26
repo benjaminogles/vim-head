@@ -62,6 +62,7 @@ nnoremap <buffer> ]] 0/^\*<cr>
 nnoremap <buffer> <m-cr> :call head#heading#insert_sibling(head#config#auto_keyword(), ' ')<cr>A
 inoremap <buffer> <m-cr> <esc>:call head#heading#insert_sibling(head#config#auto_keyword(), ' ')<cr>A
 inoremap <buffer> <c-j> <esc>:call head#heading#insert_child(head#config#auto_keyword(), ' ')<cr>A
+nnoremap <buffer> <cr> :call head#heading#insert_child(head#config#auto_keyword(), ' ')<cr>A
 inoremap <buffer> <c-x> <esc>mq:call head#heading#from_content().load_bottom().load_lines(v:false).promote(1).write()<cr>`qa
 inoremap <buffer> <c-a> <esc>mq:call head#heading#from_content().load_bottom().load_lines(v:false).demote(1).write()<cr>`qla
 nnoremap <buffer> <c-x> mq:call head#heading#from_content().load_bottom().load_lines(v:false).promote(1).write()<cr>`q
